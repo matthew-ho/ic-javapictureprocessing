@@ -37,6 +37,14 @@ public class Main {
         process.rotate(theta);
         success = Utils.savePicture(process.getPic(), output);
         break;
+      case "flip":
+        char dir = args[1].charAt(0);
+        input = args[2];
+        output = args[3];
+        pic = Utils.loadPicture(input);
+        process = new Process(pic);
+        process.flip(dir);
+        success = Utils.savePicture(process.getPic(), output);
       default:
         System.err.println("No process called " + processType);
     }

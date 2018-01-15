@@ -64,4 +64,39 @@ public class Process {
 
     pic = newPic;
   }
+
+  public void flip(char dir) {
+    switch (dir) {
+      case 'H':
+        flipHorizontal();
+        break;
+      case 'V':
+        flipVertical();
+        break;
+    }
+  }
+
+  private void flipHorizontal() {
+    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
+
+    for (int x = 0; x < pic.getWidth(); x++) {
+      for (int y = 0; y < pic.getHeight(); y++) {
+        newPic.setPixel(pic.getWidth() - x - 1, y, pic.getPixel(x, y));
+      }
+    }
+
+    pic = newPic;
+  }
+
+  private void flipVertical() {
+    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
+
+    for (int x = 0; x < pic.getWidth(); x++) {
+      for (int y = 0; y < pic.getHeight(); y++) {
+        newPic.setPixel(x, pic.getHeight() - y - 1, pic.getPixel(x, y));
+      }
+    }
+
+    pic = newPic;
+  }
 }
