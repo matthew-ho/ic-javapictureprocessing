@@ -37,6 +37,23 @@ public class Process {
   }
 
   public void rotate(int theta) {
+    switch (theta) {
+      case 90:
+        rotate90();
+        break;
+      case 180:
+        rotate90();
+        rotate90();
+        break;
+      case 270:
+        rotate90();
+        rotate90();
+        rotate90();
+        break;
+    }
+  }
+
+  private void rotate90() {
     Picture newPic = Utils.createPicture(pic.getHeight(), pic.getWidth());
 
     for (int x = 0; x < pic.getWidth(); x++) {
