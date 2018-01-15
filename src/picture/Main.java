@@ -28,6 +28,15 @@ public class Main {
         process.grayscale();
         success = Utils.savePicture(process.getPic(), output);
         break;
+      case "rotate":
+        int theta = Integer.parseInt(args[1]);
+        input = args[2];
+        output = args[3];
+        pic = Utils.loadPicture(input);
+        process = new Process(pic);
+        process.rotate(theta);
+        success = Utils.savePicture(process.getPic(), output);
+        break;
       default:
         System.err.println("No process called " + processType);
     }

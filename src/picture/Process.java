@@ -35,4 +35,16 @@ public class Process {
       }
     }
   }
+
+  public void rotate(int theta) {
+    Picture newPic = Utils.createPicture(pic.getHeight(), pic.getWidth());
+
+    for (int x = 0; x < pic.getWidth(); x++) {
+      for (int y = 0; y < pic.getHeight(); y++) {
+        newPic.setPixel(pic.getHeight() - y - 1, x, pic.getPixel(x, y));
+      }
+    }
+
+    pic = newPic;
+  }
 }
