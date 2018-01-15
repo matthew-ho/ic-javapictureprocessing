@@ -45,6 +45,15 @@ public class Main {
         process = new Process(pic);
         process.flip(dir);
         success = Utils.savePicture(process.getPic(), output);
+        break;
+      case "blur":
+        input = args[1];
+        output = args[2];
+        pic = Utils.loadPicture(input);
+        process = new Process(pic);
+        process.blur();
+        success = Utils.savePicture(process.getPic(), output);
+        break;
       default:
         System.err.println("No process called " + processType);
     }
