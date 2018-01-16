@@ -184,4 +184,20 @@ public class Process {
 
     pic = newPic;
   }
+
+  public void mosaic(int tileSize) {
+    int numPics = pics.length;
+    int width = minWidth() - (minWidth() % tileSize);
+    int height = minHeight() - (minHeight() % tileSize);
+    Picture newPic = Utils.createPicture(width, height);
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        Color chosenPixel = pics[((x + y) / tileSize) % numPics].getPixel(x, y);
+        newPic.setPixel(x, y, chosenPixel);
+      }
+    }
+
+    pic = newPic;
+  }
 }

@@ -8,6 +8,7 @@ public class Main {
     String output = args[args.length - 1];
     Picture pic = Utils.loadPicture(input);
     Process process = new Process(pic);
+    Picture[] pics;
 
     String processType = args[0];
     switch (processType) {
@@ -26,7 +27,7 @@ public class Main {
         process.flip(dir);
         break;
       case "blend":
-        Picture[] pics = new Picture[args.length - 2];
+        pics = new Picture[args.length - 2];
         for (int i = 1; i < args.length - 1; i++) {
           pics[i - 1] = Utils.loadPicture(args[i]);
         }
@@ -35,6 +36,15 @@ public class Main {
         break;
       case "blur":
         process.blur();
+        break;
+      case "mosaic":
+        int tileSize = Integer.parseInt(args[1]);
+        pics = new Picture[args.length - 3];
+        for (int i = 2; i < args.length - 1; i++) {
+          pics[i - 2] = Utils.loadPicture(args[i]);
+        }
+        process = new Process(pics);
+        process.mosaic(tileSize);
         break;
       default:
         System.err.println("No process called " + processType);
