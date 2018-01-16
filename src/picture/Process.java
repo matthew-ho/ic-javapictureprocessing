@@ -3,9 +3,14 @@ package picture;
 public class Process {
 
   private Picture pic;
+  private Picture[] pics;
 
   public Process(Picture pic) {
     this.pic = pic;
+  }
+
+  public Process(Picture[] pics) {
+    this.pics = pics;
   }
 
   public Picture getPic() {
@@ -98,6 +103,56 @@ public class Process {
     }
 
     pic = newPic;
+  }
+
+  public void blend() {
+    int minWidth = minWidth();
+    int minHeight = minHeight();
+    int numPics = pics.length;
+
+    Picture newPic = Utils.createPicture(minWidth, minHeight);
+
+    for (int x = 0; x < minWidth; x++) {
+      for (int y = 0; y < minHeight; y++) {
+        int redSum = 0;
+        int greenSum = 0;
+        int blueSum = 0;
+
+        for (int i = 0; i < numPics; i++) {
+          Color pixel = pics[i].getPixel(x, y);
+          redSum += pixel.getRed();
+          greenSum += pixel.getGreen();
+          blueSum += pixel.getBlue();
+        }
+
+        Color newPixel = new Color(redSum / numPics, greenSum / numPics,
+            blueSum / numPics);
+
+        newPic.setPixel(x, y, newPixel);
+      }
+    }
+
+    pic = newPic;
+  }
+
+  private int minWidth() {
+    int min = pics[0].getWidth();
+
+    for (int i = 0; i < pics.length; i++) {
+      min = Math.min(min, pics[i].getWidth());
+    }
+
+    return min;
+  }
+
+  private int minHeight() {
+    int min = pics[0].getHeight();
+
+    for (int i = 0; i < pics.length; i++) {
+      min = Math.min(min, pics[i].getHeight());
+    }
+
+    return min;
   }
 
   public void blur() {

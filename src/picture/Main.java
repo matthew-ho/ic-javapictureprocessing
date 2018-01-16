@@ -9,6 +9,8 @@ public class Main {
     Picture pic;
     Process process;
 
+    //System.out.println(args.length);
+
     // TODO: Implement this.
     String processType = args[0];
     switch (processType) {
@@ -44,6 +46,16 @@ public class Main {
         pic = Utils.loadPicture(input);
         process = new Process(pic);
         process.flip(dir);
+        success = Utils.savePicture(process.getPic(), output);
+        break;
+      case "blend":
+        output = args[args.length - 1];
+        Picture[] pics = new Picture[args.length - 2];
+        for (int i = 1; i < args.length - 1; i++) {
+          pics[i - 1] = Utils.loadPicture(args[i]);
+        }
+        process = new Process(pics);
+        process.blend();
         success = Utils.savePicture(process.getPic(), output);
         break;
       case "blur":
