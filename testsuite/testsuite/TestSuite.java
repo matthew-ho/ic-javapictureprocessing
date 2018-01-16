@@ -83,11 +83,25 @@ public class TestSuite {
   }
 
   @Test
+  public void blurSunset() throws IOException {
+    assertEquals(Utils.loadPicture("images/sunsetBlur64x32.png"),
+        runMain(tmpFolder, "blur", "images/sunset64x32.png"));
+  }
+
+  @Test
   public void blendBWAndRainbow() throws IOException {
     assertEquals(
         Utils.loadPicture("images/rainbowpatternsblend64x64.png"),
         runMain(tmpFolder, "blend", "images/bwpatterns64x64.png",
             "images/rainbow64x64doc.png"));
+  }
+
+  @Test
+  public void blendRainbowAndSunset() throws IOException {
+    assertEquals(
+        Utils.loadPicture("images/rainbowsunsetBlend.png"),
+        runMain(tmpFolder, "blend", "images/rainbow64x64doc.png",
+            "images/sunset64x32.png"));
   }
 
 }
