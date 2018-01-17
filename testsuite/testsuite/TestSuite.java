@@ -104,4 +104,36 @@ public class TestSuite {
             "images/sunset64x32.png"));
   }
 
+  @Test
+  public void blendBlueAndSunsetAndGreen() throws IOException {
+    assertEquals(
+        Utils.loadPicture("images/bluesunsetgreenBlend.png"),
+        runMain(tmpFolder, "blend", "images/blue64x32doc.png",
+            "images/sunset64x32.png", "images/green64x64doc.png"));
+  }
+
+  @Test
+  public void mosaicGreenAndRainbow3() throws IOException {
+    assertEquals(
+        Utils.loadPicture("images/greenrainbowMosaic3.png"),
+        runMain(tmpFolder, "mosaic", "3", "images/green64x64doc.png",
+            "images/rainbow64x64doc.png"));
+  }
+
+  @Test
+  public void mosaicGreenAndRainbow4() throws IOException {
+    assertEquals(
+        Utils.loadPicture("images/greenrainbowMosaic4.png"),
+        runMain(tmpFolder, "mosaic", "4", "images/green64x64doc.png",
+            "images/rainbow64x64doc.png"));
+  }
+
+  @Test
+  public void mosaicGreenAndRainbowAndWhite6() throws IOException {
+    assertEquals(
+        Utils.loadPicture("images/greenrainbowwhiteMosaic6.png"),
+        runMain(tmpFolder, "mosaic", "6", "images/green64x64doc.png",
+            "images/rainbow64x64doc.png", "images/white64x64.png"));
+  }
+
 }
