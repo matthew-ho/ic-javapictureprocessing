@@ -34,7 +34,8 @@ public class Process {
     for (int x = 0; x < pic.getWidth(); x++) {
       for (int y = 0; y < pic.getHeight(); y++) {
         Color oldPixel = pic.getPixel(x, y);
-        int average = (oldPixel.getRed() + oldPixel.getGreen() + oldPixel.getBlue()) / 3;
+        int average = (oldPixel.getRed() + oldPixel.getGreen() +
+            oldPixel.getBlue()) / 3;
         Color newPixel = new Color (average, average, average);
         pic.setPixel(x, y, newPixel);
       }
@@ -157,7 +158,7 @@ public class Process {
 
   public void blur() {
     Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
-    
+
     for (int x = 0; x < pic.getWidth(); x++) {
       for (int y = 0; y < pic.getHeight(); y++) {
         if (isOnEdgeOfPic(x, y)) {
@@ -173,7 +174,8 @@ public class Process {
   }
 
   private boolean isOnEdgeOfPic(int x, int y) {
-    return x == 0 || y == 0 || x == pic.getWidth() - 1 || y == pic.getHeight() - 1;
+    return x == 0 || y == 0 ||
+        x == pic.getWidth() - 1 || y == pic.getHeight() - 1;
   }
 
   private Color averageSurroundingPixels(int x, int y) {
