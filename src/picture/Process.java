@@ -157,32 +157,40 @@ public class Process {
 
   public void blur() {
     Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
+    
     for (int x = 0; x < pic.getWidth(); x++) {
       for (int y = 0; y < pic.getHeight(); y++) {
-        if (x == 0 || y == 0 || x == pic.getWidth() - 1 || y == pic.getHeight() - 1) {
+        if (isOnEdgeOfPic(x, y)) {
           newPic.setPixel(x, y, pic.getPixel(x, y));
         } else {
-          int redSum = 0;
-          int greenSum = 0;
-          int blueSum = 0;
-
-          for (int i = x - 1; i < x + 2; i++) {
-            for (int j = y - 1; j < y + 2; j++) {
-              Color pixel = pic.getPixel(i, j);
-              redSum += pixel.getRed();
-              greenSum += pixel.getGreen();
-              blueSum += pixel.getBlue();
-            }
-          }
-
-          Color newPixel = new Color(redSum / 9, greenSum / 9, blueSum / 9);
-
+          Color newPixel = averageSurroundingPixels(x, y);
           newPic.setPixel(x, y, newPixel);
         }
       }
     }
 
     pic = newPic;
+  }
+
+  private boolean isOnEdgeOfPic(int x, int y) {
+    return x == 0 || y == 0 || x == pic.getWidth() - 1 || y == pic.getHeight() - 1;
+  }
+
+  private Color averageSurroundingPixels(int x, int y) {
+    int redSum = 0;
+    int greenSum = 0;
+    int blueSum = 0;
+
+    for (int i = x - 1; i < x + 2; i++) {
+      for (int j = y - 1; j < y + 2; j++) {
+        Color pixel = pic.getPixel(i, j);
+        redSum += pixel.getRed();
+        greenSum += pixel.getGreen();
+        blueSum += pixel.getBlue();
+      }
+    }
+
+    return new Color(redSum / 9, greenSum / 9, blueSum / 9);
   }
 
   public void mosaic(int tileSize) {
