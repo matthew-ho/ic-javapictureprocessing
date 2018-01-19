@@ -98,9 +98,6 @@ public class Process {
   }
 
   public void blend(Picture[] pics) {
-    assert (pics != null && pics.length < 0) :
-        "blend takes a not null, non-empty Picture array";
-
     int width = minWidth(pics);
     int height = minHeight(pics);
     int numPics = pics.length;
@@ -142,9 +139,6 @@ public class Process {
   }
 
   public void mosaic(int tileSize, Picture[] pics) {
-    assert (pics != null && pics.length < 0) :
-        "mosaic takes a not null, non-empty Picture array";
-
     int width = minWidth(pics) - (minWidth(pics) % tileSize);
     int height = minHeight(pics) - (minHeight(pics) % tileSize);
     Picture newPic = Utils.createPicture(width, height);
@@ -177,7 +171,7 @@ public class Process {
     pic = newPic;
   }
 
-  private int minWidth(Picture[] pics) {
+  private static int minWidth(Picture[] pics) {
     int min = pics[0].getWidth();
 
     for (int i = 0; i < pics.length; i++) {
@@ -187,7 +181,7 @@ public class Process {
     return min;
   }
 
-  private int minHeight(Picture[] pics) {
+  private static int minHeight(Picture[] pics) {
     int min = pics[0].getHeight();
 
     for (int i = 0; i < pics.length; i++) {
