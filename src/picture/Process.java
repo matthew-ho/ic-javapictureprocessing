@@ -1,5 +1,7 @@
 package picture;
 
+import java.util.function.BiFunction;
+
 public class Process {
 
   private Picture pic;
@@ -19,47 +21,49 @@ public class Process {
 
   public void invert() {
     int maxIntensity = 255;
-    for (int x = 0; x < pic.getWidth(); x++) {
-      for (int y = 0; y < pic.getHeight(); y++) {
-        Color oldPixel = pic.getPixel(x, y);
-        Color newPixel = new Color(maxIntensity - oldPixel.getRed(),
-            maxIntensity - oldPixel.getGreen(),
-            maxIntensity - oldPixel.getBlue());
-        pic.setPixel(x, y, newPixel);
-      }
-    }
+
+    applyProcessToAllPixels(
+        (x, y) -> {
+          Color oldPixel = pic.getPixel(x, y);
+          Color newPixel = new Color(maxIntensity - oldPixel.getRed(),
+                                     maxIntensity - oldPixel.getGreen(),
+                                     maxIntensity - oldPixel.getBlue());
+          return newPixel;
+        }
+    );
   }
 
   public void grayscale() {
-    for (int x = 0; x < pic.getWidth(); x++) {
-      for (int y = 0; y < pic.getHeight(); y++) {
-        Color oldPixel = pic.getPixel(x, y);
-        int average = (oldPixel.getRed() + oldPixel.getGreen() +
-            oldPixel.getBlue()) / 3;
-        Color newPixel = new Color (average, average, average);
-        pic.setPixel(x, y, newPixel);
-      }
-    }
+    applyProcessToAllPixels(
+        (x, y) -> {
+          Color oldPixel = pic.getPixel(x, y);
+          int average = (oldPixel.getRed() + oldPixel.getGreen() +
+              oldPixel.getBlue()) / 3;
+          Color newPixel = new Color (average, average, average);
+          return newPixel;
+        }
+    );
   }
 
-  public void rotate(int theta) {
-    switch (theta) {
+  public void rotate(int angle) {
+    switch (angle) {
       case 90:
-        rotate90();
+        rotate90Clockwise();
         break;
       case 180:
-        rotate90();
-        rotate90();
+        for (int i = 0; i < 2; i++) {
+          rotate90Clockwise();
+        }
         break;
       case 270:
-        rotate90();
-        rotate90();
-        rotate90();
+        for (int i = 0; i < 3; i++) {
+          rotate90Clockwise();
+        }
         break;
     }
   }
 
-  private void rotate90() {
+  private void rotate90Clockwise() {
     Picture newPic = Utils.createPicture(pic.getHeight(), pic.getWidth());
 
     for (int x = 0; x < pic.getWidth(); x++) {
@@ -83,27 +87,19 @@ public class Process {
   }
 
   private void flipHorizontal() {
-    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
-
-    for (int x = 0; x < pic.getWidth(); x++) {
-      for (int y = 0; y < pic.getHeight(); y++) {
-        newPic.setPixel(pic.getWidth() - x - 1, y, pic.getPixel(x, y));
-      }
-    }
-
-    pic = newPic;
+    applyProcessToAllPixels(
+        (x, y) -> {
+          return pic.getPixel(pic.getWidth() - x - 1, y);
+        }
+    );
   }
 
   private void flipVertical() {
-    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
-
-    for (int x = 0; x < pic.getWidth(); x++) {
-      for (int y = 0; y < pic.getHeight(); y++) {
-        newPic.setPixel(x, pic.getHeight() - y - 1, pic.getPixel(x, y));
-      }
-    }
-
-    pic = newPic;
+    applyProcessToAllPixels(
+        (x, y) -> {
+          return pic.getPixel(x, pic.getHeight() - y - 1);
+        }
+    );
   }
 
   public void blend() {
@@ -136,6 +132,47 @@ public class Process {
     pic = newPic;
   }
 
+  public void blur() {
+    applyProcessToAllPixels(
+        (x, y) -> {
+          if (isOnEdgeOfPic(x, y)) {
+            return pic.getPixel(x, y);
+          } else {
+            return averageSurroundingPixels(x, y);
+          }
+        }
+    );
+  }
+
+  public void mosaic(int tileSize) {
+    int width = minWidth() - (minWidth() % tileSize);
+    int height = minHeight() - (minHeight() % tileSize);
+    Picture newPic = Utils.createPicture(width, height);
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        Color chosenPixel = pics[((x + y) / tileSize) % pics.length]
+            .getPixel(x, y);
+        newPic.setPixel(x, y, chosenPixel);
+      }
+    }
+
+    pic = newPic;
+  }
+
+  private void applyProcessToAllPixels(
+      BiFunction<Integer, Integer, Color> createNewPixel) {
+    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
+
+    for (int x = 0; x < pic.getWidth(); x++) {
+      for (int y = 0; y < pic.getHeight(); y++) {
+        newPic.setPixel(x, y, createNewPixel.apply(x, y));
+      }
+    }
+
+    pic = newPic;
+  }
+
   private int minWidth() {
     int min = pics[0].getWidth();
 
@@ -154,23 +191,6 @@ public class Process {
     }
 
     return min;
-  }
-
-  public void blur() {
-    Picture newPic = Utils.createPicture(pic.getWidth(), pic.getHeight());
-
-    for (int x = 0; x < pic.getWidth(); x++) {
-      for (int y = 0; y < pic.getHeight(); y++) {
-        if (isOnEdgeOfPic(x, y)) {
-          newPic.setPixel(x, y, pic.getPixel(x, y));
-        } else {
-          Color newPixel = averageSurroundingPixels(x, y);
-          newPic.setPixel(x, y, newPixel);
-        }
-      }
-    }
-
-    pic = newPic;
   }
 
   private boolean isOnEdgeOfPic(int x, int y) {
@@ -193,21 +213,5 @@ public class Process {
     }
 
     return new Color(redSum / 9, greenSum / 9, blueSum / 9);
-  }
-
-  public void mosaic(int tileSize) {
-    int numPics = pics.length;
-    int width = minWidth() - (minWidth() % tileSize);
-    int height = minHeight() - (minHeight() % tileSize);
-    Picture newPic = Utils.createPicture(width, height);
-
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        Color chosenPixel = pics[((x + y) / tileSize) % numPics].getPixel(x, y);
-        newPic.setPixel(x, y, chosenPixel);
-      }
-    }
-
-    pic = newPic;
   }
 }
