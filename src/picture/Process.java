@@ -5,14 +5,9 @@ import java.util.function.BiFunction;
 public class Process {
 
   private Picture pic;
-  private Picture[] pics;
 
   public Process(Picture pic) {
     this.pic = pic;
-  }
-
-  public Process(Picture[] pics) {
-    this.pics = pics;
   }
 
   public Picture getPic() {
@@ -102,15 +97,17 @@ public class Process {
     );
   }
 
-  public void blend() {
-    int minWidth = minWidth();
-    int minHeight = minHeight();
+  public void blend(Picture[] pics) {
+    assert (pics != null && pics.length < 0) :
+        "blend takes a not null, non-empty Picture array";
+
+    int width = minWidth(pics);
+    int height = minHeight(pics);
     int numPics = pics.length;
+    Picture newPic = Utils.createPicture(width, height);
 
-    Picture newPic = Utils.createPicture(minWidth, minHeight);
-
-    for (int x = 0; x < minWidth; x++) {
-      for (int y = 0; y < minHeight; y++) {
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
         int redSum = 0;
         int greenSum = 0;
         int blueSum = 0;
@@ -144,9 +141,14 @@ public class Process {
     );
   }
 
-  public void mosaic(int tileSize) {
-    int width = minWidth() - (minWidth() % tileSize);
-    int height = minHeight() - (minHeight() % tileSize);
+  public void mosaic(int tileSize, Picture[] pics) {
+    assert (pics != null && pics.length < 0) :
+        "mosaic takes a not null, non-empty Picture array";
+    assert (tileSize > 0) :
+        "mosaic takes a tileSize that is greater than 0";
+
+    int width = minWidth(pics) - (minWidth(pics) % tileSize);
+    int height = minHeight(pics) - (minHeight(pics) % tileSize);
     Picture newPic = Utils.createPicture(width, height);
 
     for (int x = 0; x < width; x++) {
@@ -173,7 +175,7 @@ public class Process {
     pic = newPic;
   }
 
-  private int minWidth() {
+  private int minWidth(Picture[] pics) {
     int min = pics[0].getWidth();
 
     for (int i = 0; i < pics.length; i++) {
@@ -183,7 +185,7 @@ public class Process {
     return min;
   }
 
-  private int minHeight() {
+  private int minHeight(Picture[] pics) {
     int min = pics[0].getHeight();
 
     for (int i = 0; i < pics.length; i++) {

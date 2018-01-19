@@ -31,8 +31,7 @@ public class Main {
         for (int i = 1; i < args.length - 1; i++) {
           pics[i - 1] = Utils.loadPicture(args[i]);
         }
-        process = new Process(pics);
-        process.blend();
+        process.blend(pics);
         break;
       case "blur":
         process.blur();
@@ -43,8 +42,7 @@ public class Main {
         for (int i = 2; i < args.length - 1; i++) {
           pics[i - 2] = Utils.loadPicture(args[i]);
         }
-        process = new Process(pics);
-        process.mosaic(tileSize);
+        process.mosaic(tileSize, pics);
         break;
       default:
         System.err.println("No process called " + processType);
