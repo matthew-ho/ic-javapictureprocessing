@@ -1,9 +1,40 @@
 package picture;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Main {
 
+  private static final String validArguments =
+          "invert <input> <output>\n" +
+          "grayscale <input> <output>\n" +
+          "rotate [90|180|270] <input> <output>\n" +
+          "flip [H|V] <input> <output>\n" +
+          "blend <input_1> <input_2> <input_...> <input_n> <output>\n" +
+          "blur <input> <output>\n" +
+          "mosaic <tileSize> <input_1> <input_2> <input_...> <input_n> "
+              + "<output>";
+
+  private static final List<String> processesWithMoreThanThreeArgs =
+      Arrays.asList("rotate", "flip", "mosaic");
+
   public static void main(String[] args) {
-    boolean success = false;
+
+    if (args.length < 3) {
+      System.err.println("Insufficient number of arguments");
+      System.out.println("Here is a list of valid arguments:");
+      System.out.println(validArguments);
+      System.exit(1);
+    } else if (args.length < 4 &&
+        (processesWithMoreThanThreeArgs.contains(args[0]))) {
+      System.err.println("Insufficient number of arguments");
+      System.out.println("Here is a list of valid arguments:");
+      System.out.println(validArguments);
+      System.exit(1);
+    }
+
+    boolean success;
     String input = args[args.length - 2];
     String output = args[args.length - 1];
     Picture pic = Utils.loadPicture(input);
@@ -46,8 +77,14 @@ public class Main {
         break;
       default:
         System.err.println("No process called " + processType);
+        System.exit(1);
     }
 
     success = Utils.savePicture(process.getPic(), output);
+
+    if (!success) {
+      System.err.println("Failed to save picture to " + output);
+      System.exit(1);
+    }
   }
 }
