@@ -144,12 +144,14 @@ public class Process {
   public void mosaic(int tileSize, Picture[] pics) {
     assert (pics != null && pics.length < 0) :
         "mosaic takes a not null, non-empty Picture array";
-    assert (tileSize > 0) :
-        "mosaic takes a tileSize that is greater than 0";
 
     int width = minWidth(pics) - (minWidth(pics) % tileSize);
     int height = minHeight(pics) - (minHeight(pics) % tileSize);
     Picture newPic = Utils.createPicture(width, height);
+
+    assert (tileSize > 0 && tileSize <= width && tileSize <= height) :
+        "mosaic takes a tileSize that is between 0 and "
+            + "the minimum height/width";
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
