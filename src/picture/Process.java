@@ -177,7 +177,7 @@ public class Process {
     pic = newPic;
   }
 
-  private static int minWidth(Picture[] pics) {
+  private int minWidth(Picture[] pics) {
     int min = pics[0].getWidth();
 
     for (int i = 0; i < pics.length; i++) {
@@ -187,7 +187,7 @@ public class Process {
     return min;
   }
 
-  private static int minHeight(Picture[] pics) {
+  private int minHeight(Picture[] pics) {
     int min = pics[0].getHeight();
 
     for (int i = 0; i < pics.length; i++) {
