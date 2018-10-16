@@ -2,6 +2,10 @@ package picture;
 
 import java.util.function.BiFunction;
 
+/**
+ * A class that encapsulates and provides methods for transforming a given
+ * Picture.
+ */
 public class Process {
 
   private Picture pic;
@@ -14,6 +18,9 @@ public class Process {
     return pic;
   }
 
+  /**
+   * Inverts the picture (i.e creates the negative version on the picture).
+   */
   public void invert() {
     int maxIntensity = 255;
 
@@ -28,6 +35,9 @@ public class Process {
     );
   }
 
+  /**
+   * Modifies the picture to become a grayscale version of itself.
+   */
   public void grayscale() {
     applyProcessToAllPixels(
         (x, y) -> {
@@ -40,6 +50,11 @@ public class Process {
     );
   }
 
+  /**
+   * Rotates the picture by the given angle.
+   * @param angle the angle to rotate the picture by which should be 90, 180
+   *              or 270.
+   */
   public void rotate(int angle) {
     switch (angle) {
       case 90:
@@ -70,6 +85,10 @@ public class Process {
     pic = newPic;
   }
 
+  /**
+   * Flips the picture based on the given direction.
+   * @param dir direction to flip the picture: H (horizontal) or V (vertical).
+   */
   public void flip(char dir) {
     switch (dir) {
       case 'H':
@@ -97,6 +116,10 @@ public class Process {
     );
   }
 
+  /**
+   * Blends the given pictures together by averaging all their pixel values.
+   * @param pics array of pictures to blend together.
+   */
   public void blend(Picture[] pics) {
     assert (pics != null && pics.length > 0) :
         "blend takes a not null, non-empty Picture array";
@@ -129,6 +152,11 @@ public class Process {
     pic = newPic;
   }
 
+  /**
+   * Blurs the picture by setting each pixel to the average of its
+   * surrounding pixels (including itself). If a pixel is on the edge of the
+   * picture it is unchanged.
+   */
   public void blur() {
     applyProcessToAllPixels(
         (x, y) -> {
@@ -141,6 +169,15 @@ public class Process {
     );
   }
 
+  /**
+   * Creates a mosaic of the given pictures by taking the first element of
+   * the first picture, second element of the second picture, etc., wrapping
+   * around to the first picture when the number of pictures is less than the
+   * number of pixels of the smallest picture. The size of the mosaic is the
+   * size of the smallest picture.
+   * @param tileSize size of the mosaic tiles.
+   * @param pics pictures to be used in the mosaic.
+   */
   public void mosaic(int tileSize, Picture[] pics) {
     assert (pics != null && pics.length > 0) :
         "mosaic takes a not null, non-empty Picture array";

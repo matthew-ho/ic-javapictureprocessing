@@ -3,6 +3,10 @@ package picture;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Transforms a given image using the given transformation function and saves
+ * the result in the given output file.
+ */
 public class Main {
 
   private static final String validArguments =
